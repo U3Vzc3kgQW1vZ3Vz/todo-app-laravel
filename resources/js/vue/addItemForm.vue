@@ -1,6 +1,6 @@
 <template>
     <div class="addItem">
-        <input type="text" v-model="item.name"/>
+        <input type="itemText" v-model="item.name"/>
         <font-awesome-icon icon="plus-square"
         @click="addItem()"
         :class="[item.name?'active':'inactive','plus']"
@@ -64,8 +64,23 @@ input{
     margin-right: 10px;
     width: 100%;
 }
+input.itemText:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+input:hover{
+     outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
 .plus{
     font-size: 20px;
+}
+.plus:hover{
+    background: #6c757d;
+  color: white;
+  border-color: #6c757d;
 }
 .active{
     color: #00CE25;
