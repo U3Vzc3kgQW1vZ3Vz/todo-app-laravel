@@ -1,5 +1,5 @@
 <template>
-    <div class="todoListContainer">
+    <!-- <div class="todoListContainer">
         <div class="heading">
             <h2 id="title">
                 Todo list
@@ -12,15 +12,18 @@
         <list-view :items="items"
         v-on:reloadList="getList()"
         />
-    </div>
+    </div> -->
+    <login/>
 </template>
 <script>
-import addItemForm from './addItemForm.vue';
-import listView from './listView.vue';
+import addItemForm from './todoApp/addItemForm.vue';
+import listView from './todoApp/listView.vue';
+import login from './common/login.vue';
 export default {
     components: {
         addItemForm,
-        listView
+        listView,
+        login
     },
       data() {
         return {
