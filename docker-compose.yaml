@@ -10,8 +10,8 @@ services:
       - .:/var/www
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
     network_mode: bridge
   frontend:
     build:
@@ -40,20 +40,20 @@ services:
   #   networks:
   #     - laravel
 
-  db:
-    image: mysql:8.0
-    container_name: mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: root
-      MYSQL_USER: laravel
-    # ports:
-    #   - "3307:3306"
-    volumes:  
-      - dbdata:/var/lib/mysql
-    network_mode: host
+  # db:
+  #   image: mysql:8.0
+  #   container_name: mysql
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_DATABASE: todoapp
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_PASSWORD: root
+  #     MYSQL_USER: laravel
+  #   # ports:
+  #   #   - "3307:3306"
+  #   volumes:  
+  #     - dbdata:/var/lib/mysql
+  #   network_mode: host
     
 
 volumes:
@@ -62,7 +62,6 @@ volumes:
 networks:
   laravel:
     driver: bridge
-  dbs:
-    driver: host
+  
 
   

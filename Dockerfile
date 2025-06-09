@@ -29,11 +29,6 @@ COPY . .
 # Install PHP dependencies
 RUN composer install
 
-RUN npm install
-
-RUN npm run build
-
-
 # Set file permissions
 # RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www/storage
 
