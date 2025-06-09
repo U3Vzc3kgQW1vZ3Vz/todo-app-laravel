@@ -12,7 +12,7 @@ services:
       - "8000:8000"
     # depends_on:
     #   - db
-    network_mode: bridge
+    
   frontend:
     build:
       context: .
@@ -25,8 +25,6 @@ services:
 
     volumes:
       - .:/var/www
-    network_mode: host
-
   # webserver:
   #   image: nginx:alpine
   #   container_name: nginx
@@ -56,12 +54,9 @@ services:
   #   network_mode: host
     
 
-volumes:
-  dbdata:
+# volumes:
+#   dbdata:
 
-networks:
-  laravel:
-    driver: bridge
-  
-
-  
+# networks:
+#   laravel:
+#     driver: bridge 
