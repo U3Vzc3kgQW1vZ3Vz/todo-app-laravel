@@ -103,7 +103,7 @@ export default {
           completed: this.item.completed
         };
 
-        const response = await fetch(`api/item/${this.item.id}`, {
+        const response = await window.fetch(`/api/item/${this.item.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -133,7 +133,7 @@ export default {
       }
 
       try {
-        const response = await fetch(`api/item/${this.item.id}`, {
+        const response = await window.fetch(`/api/item/${this.item.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json'
@@ -163,7 +163,7 @@ export default {
           name: this.localItem.name
         };
 
-        const response = await fetch(`api/item/${this.item.id}`, {
+        const response = await window.fetch(`/api/item/${this.item.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'

@@ -5,86 +5,109 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-
-use function Symfony\Component\Clock\now;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse; 
 class ItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
-        return Item::orderBy('created_at','DESC')->get();
+        if (Auth::check()) {
+            
+            $items = Item::where('user_id', Auth::id())
+                        ->orderBy('created_at', 'DESC')
+                        ->get();
+            return response()->json($items);
+        }
+
+        return response()->json(['message' => 'Not logged in'], 401);
+     }
+
+    public function store(Request $request): JsonResponse
+    {
+        if (Auth::check()) {
+            $validatedData = $request->validate([
+                'item.name' => 'required|string|max:255',
+            ]);
+
+            $newItem = new Item();
+            $newItem->name = $validatedData['item']['name'];
+            $newItem->user_id = Auth::id(); 
+            $newItem->save();
+
+            return response()->json($newItem, 201); 
+        }
+
+        return response()->json(['message' => 'Not logged in'], 401);
+     }
+
+    public function update(Request $request, string $id): JsonResponse
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Not logged in'], 401); 
+         }
+
+        $item = Item::find($id);
+
+        if (!$item) {
+            return response()->json(['message' => 'Item not found'], 404); 
+           }
+
+        if ($item->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized to update this item'], 403);
+         }
+
+        $validatedData = $request->validate([
+            'item.name' => 'nullable|string|max:255',
+            'item.completed' => 'nullable|boolean',
+        ]);
+
+        if (isset($validatedData['item']['completed'])) {
+            $item->completed = $validatedData['item']['completed'];
+            $item->completed_at = $item->completed ? Carbon::now() : null;
+        }
+
+        if (isset($validatedData['item']['name'])) {
+            $item->name = $validatedData['item']['name'];
+        }
+
+        $item->save();
+
+        return response()->json($item);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function destroy(string $id): JsonResponse
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Not logged in'], 401);
+        }
+
+        $item = Item::find($id);
+
+        if (!$item) {
+            return response()->json(['message' => 'Item not found'], 404); 
+        }
+
+        if ($item->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized to delete this item'], 403); 
+        }
+
+        $item->delete();
+
+        return response()->json(['message' => "Item {$id} deleted"], 200);
+    }
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-        $new_item= new Item();
-        $new_item->name=$request->item['name'];
-        $new_item->save();
-        return $new_item;
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-        $request_item=Item::find($id);
-        if($request_item){
-            $request_item->completed=$request->item['completed']??false;
-            $request_item->completed_at=($request->item['completed']??false)?Carbon::now():null;
-            if($request->item['name']){
-            $request_item->name=$request->item['name'];
-            }
-            $request_item->save();
-            return $request_item;
-        }
-        return "Item not found";
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $request_item=Item::find($id);
-        if($request_item){
-            $request_item->delete();
-            return "Item {$id} deleted";
-        }
-        return "Item not available";
         //
     }
 }

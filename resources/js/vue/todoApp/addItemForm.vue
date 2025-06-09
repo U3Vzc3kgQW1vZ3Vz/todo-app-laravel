@@ -24,7 +24,7 @@ export default {
                 return;
             }
       try {
-        const response = await fetch('/api/item/store', {
+        const response = await window.fetch('/api/item/store', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
